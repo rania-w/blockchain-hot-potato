@@ -42,7 +42,7 @@ contract Token {
     // The Transfer event helps off-chain applications understand
     // what happens within your contract.
     
-    // poenta je da budu pogubljeni i da ovo ne postoji
+   
     // event Transfer(address indexed _from, address indexed _to, uint256 _value);
 
     /**
@@ -153,7 +153,7 @@ contract Token {
      function getAllPlayers() public view returns (Player[] memory){
          /**
           * return player array that will be placed in leaderboard
-          * somehow sort by score upomoc mrzim solidity
+          * somehow sort by score
           */
          return playersArray;
      }
