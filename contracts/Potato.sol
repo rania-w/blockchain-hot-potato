@@ -15,7 +15,8 @@ contract Potato {
         Player memory first = Player({
             username: _username,
             balance: totalSupply,
-            score: 0
+            score: 0,
+            receivedToken: block.timestamp
         });
 
         playerAddressMap[msg.sender] = first;
@@ -24,8 +25,15 @@ contract Potato {
 
     function transfer(address to) public {
         require(playerAddressMap[msg.sender].balance == 1, "Not enough tokens");
+
+        playerAddressMap[msg.sender].score = stopCounter(
+            msg.sender,
+            block.timestamp,
+            playerAddressMap[msg.sender].receivedToken
+        );
         playerAddressMap[msg.sender].balance -= 1;
         playerAddressMap[to].balance += 1;
+        initCounter(to);
     }
 
     function transferRandom(address to) public {
@@ -35,35 +43,40 @@ contract Potato {
         //to random address
         playerAddressMap[to].balance += 1;
     }
+
     function addPlayers(address key, string memory username) public {
         Player memory player = Player({
             username: username,
             score: 0,
-            balance: 0
+            balance: 0,
+            receivedToken: 0
         });
         playerAddressMap[key] = player;
         addressArray.push(key);
-        
     }
 
     function getPlayerInfo(address key) public view returns (Player memory) {
         return playerAddressMap[key];
     }
+
     function getAllPlayers() public view returns (Player[] memory) {
         Player[] memory playerArray = new Player[](addressArray.length);
-        for(uint i = 0; i<addressArray.length; i++){
-            playerArray[i]=(playerAddressMap[addressArray[i]]);
+        for (uint i = 0; i < addressArray.length; i++) {
+            playerArray[i] = (playerAddressMap[addressArray[i]]);
         }
         return playerArray;
     }
 
-    function timer() public {
-        /**
-         * count seconds upon receiving token
-         * if seconds > 86 400 trigger transfer random
-         * player gets 90 000 points
-         * else score = counter
-         */
+    function initCounter(address key) internal {
+        playerAddressMap[key].receivedToken = block.timestamp;
+    }
+
+    function stopCounter(
+        address key,
+        uint newTimestamp,
+        uint oldTimestamp
+    ) internal view returns (uint newScore) {
+        newScore = playerAddressMap[key].score + (newTimestamp - oldTimestamp);
     }
 
     //works
