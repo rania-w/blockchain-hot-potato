@@ -1,5 +1,9 @@
 //SPDX-License-Identifier: UNLICENSED
 
+/**
+ * sve okej osim transfer random, koji je radio prvi put al drugi put ne
+ */
+
 pragma solidity ^0.8.17;
 
 import "./Player.sol";
@@ -14,7 +18,7 @@ contract Potato {
     constructor(string memory _username) {
         Player memory first = Player({
             username: _username,
-            balance: totalSupply,
+            hasPotato: true,
             score: 0,
             receivedToken: block.timestamp
         });
@@ -24,31 +28,49 @@ contract Potato {
     }
 
     function transfer(address to) public {
-        require(playerAddressMap[msg.sender].balance == 1, "Not enough tokens");
+        require(playerAddressMap[msg.sender].hasPotato, "Not enough tokens");
 
         playerAddressMap[msg.sender].score = stopCounter(
             msg.sender,
             block.timestamp,
             playerAddressMap[msg.sender].receivedToken
         );
-        playerAddressMap[msg.sender].balance -= 1;
-        playerAddressMap[to].balance += 1;
+        playerAddressMap[msg.sender].hasPotato = false;
+        playerAddressMap[to].hasPotato = true;
         initCounter(to);
     }
 
-    function transferRandom(address to) public {
-        require(playerAddressMap[msg.sender].balance == 1, "Not enough tokens");
-
-        playerAddressMap[msg.sender].balance -= 1;
-        //to random address
-        playerAddressMap[to].balance += 1;
+    function getRandomAddress(address sender) internal view returns (address random){
+        uint arrayLength = addressArray.length;
+        uint8 digits = 0;
+        while (arrayLength != 0) {
+            arrayLength /= 10;
+            digits++;
+        }
+        uint mod = 10*digits;
+        uint rNumber = playerAddressMap[sender].receivedToken % mod;
+        return addressArray[rNumber];
+    }
+    //
+    function transferRandom() public {
+        require(playerAddressMap[msg.sender].hasPotato, "Not enough tokens");
+        //to=randomaddress
+        address to = getRandomAddress(msg.sender);
+        playerAddressMap[msg.sender].score = stopCounter(
+            msg.sender,
+            block.timestamp,
+            playerAddressMap[msg.sender].receivedToken
+        );
+        playerAddressMap[msg.sender].hasPotato = false;
+        playerAddressMap[to].hasPotato = true;
+        initCounter(to);
     }
 
     function addPlayers(address key, string memory username) public {
         Player memory player = Player({
             username: username,
             score: 0,
-            balance: 0,
+            hasPotato: false,
             receivedToken: 0
         });
         playerAddressMap[key] = player;
@@ -80,7 +102,7 @@ contract Potato {
     }
 
     //works
-    function balanceOf(address account) public view returns (uint256) {
-        return playerAddressMap[account].balance;
+    function balanceOf(address account) public view returns (bool) {
+        return playerAddressMap[account].hasPotato;
     }
 }

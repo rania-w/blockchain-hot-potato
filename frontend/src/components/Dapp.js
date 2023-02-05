@@ -96,7 +96,8 @@ export class Dapp extends React.Component {
         <div className="row">
           <div className="col-12">
             <h1>
-              {this.state.tokenData.name} ({this.state.tokenData.symbol})
+              {/* {this.state.tokenData.name} ({this.state.tokenData.symbol}) */}
+              Hot potatoes!!1!
             </h1>
             <p>
               Welcome <b>{this.state.selectedAddress}</b>, you have{" "}
