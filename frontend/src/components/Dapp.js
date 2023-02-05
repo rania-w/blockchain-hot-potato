@@ -100,11 +100,11 @@ export class Dapp extends React.Component {
               Hot potatoes!!1!
             </h1>
             <p>
-              Welcome <b>{this.state.selectedAddress}</b>, you have{" "}
+              {/* Welcome <b>{this.state.selectedAddress}</b>, you have{" "} */}
+              Welcome username!
               <b>
-                {this.state.balance.toString()} {this.state.tokenData.symbol}
+                {/* you have {this.state.balance.toString()} {this.state.tokenData.symbol} */}
               </b>
-              .
             </p>
           </div>
         </div>

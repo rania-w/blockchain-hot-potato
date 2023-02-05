@@ -3,7 +3,7 @@ import React from "react";
 export function Transfer({ transferTokens, tokenSymbol }) {
   return (
     <div>
-      <h4>Transfer</h4>
+      <h4>You have the potato! ;(</h4>
       <form
         onSubmit={(event) => {
           // This function just calls the transferTokens callback with the
@@ -33,7 +33,7 @@ export function Transfer({ transferTokens, tokenSymbol }) {
 
         </div> */}
         <div className="form-group">
-          <label>Recipient address</label>
+          <label>Enter an address to send the potato to</label>
           <input className="form-control" type="text" name="to" required />
         </div>
         <div className="form-group">

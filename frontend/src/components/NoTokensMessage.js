@@ -3,12 +3,12 @@ import React from "react";
 export function NoTokensMessage({ selectedAddress }) {
   return (
     <>
-      <p>You don't have tokens to transfer</p>
+      <h3>You don't have the potato!</h3>
       <p>
-        To get some tokens, open a terminal in the root of the repository and run: 
+        Good for you ;) 
         <br />
         <br />
-        <code>npx hardhat --network localhost faucet {selectedAddress}</code>
+        {/* <code>npx hardhat --network localhost faucet {selectedAddress}</code> */}
       </p>
     </>
   );
