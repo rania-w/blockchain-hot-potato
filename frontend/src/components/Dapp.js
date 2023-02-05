@@ -6,6 +6,7 @@ import { ethers } from "ethers";
 // We import the contract's artifacts and address here, as we are going to be
 // using them with ethers
 import TokenArtifact from "../contracts/Token.json";
+import PotatoArtifact from "../contracts/Potato.json";
 import contractAddress from "../contracts/contract-address.json";
 
 // All the logic of this dapp is contained in the Dapp component.
@@ -48,6 +49,7 @@ export class Dapp extends React.Component {
       tokenData: undefined,
       // The user's address and balance
       selectedAddress: undefined,
+      username: undefined,
       balance: undefined,
       // The ID about transactions being sent, and any possible error with them
       txBeingSent: undefined,
@@ -230,8 +232,10 @@ export class Dapp extends React.Component {
     // Then, we initialize the contract using that provider and the token's
     // artifact. You can do this same thing with your contracts.
     this._token = new ethers.Contract(
-      contractAddress.Token,
-      TokenArtifact.abi,
+      //contractAddress.Token,
+      contractAddress.Potato,
+      //TokenArtifact.abi,
+      PotatoArtifact.abi,
       this._provider.getSigner(0)
     );
   }
@@ -272,7 +276,7 @@ export class Dapp extends React.Component {
   // This method sends an ethereum transaction to transfer tokens.
   // While this action is specific to this application, it illustrates how to
   // send a transaction.
-  async _transferTokens(to, amount) {
+  async _transferTokens(to/*, amount*/) {
     // Sending a transaction is a complex operation:
     //   - The user can reject it
     //   - It can fail before reaching the ethereum network (i.e. if the user
@@ -294,7 +298,7 @@ export class Dapp extends React.Component {
 
       // We send the transaction, and save its hash in the Dapp's state. This
       // way we can indicate that we are waiting for it to be mined.
-      const tx = await this._token.transfer(to, amount);
+      const tx = await this._token.transfer(to/*, amount*/);
       this.setState({ txBeingSent: tx.hash });
 
       // We use .wait() to wait for the transaction to be mined. This method
