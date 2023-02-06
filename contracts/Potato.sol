@@ -40,17 +40,20 @@ contract Potato {
         initCounter(to);
     }
 
-    function getRandomAddress(address sender) internal view returns (address random){
+    function getRandomAddress(
+        address sender
+    ) internal view returns (address random) {
         uint arrayLength = addressArray.length;
         uint8 digits = 0;
         while (arrayLength != 0) {
             arrayLength /= 10;
             digits++;
         }
-        uint mod = 10*digits;
+        uint mod = 10 * digits;
         uint rNumber = playerAddressMap[sender].receivedToken % mod;
         return addressArray[rNumber];
     }
+    
     //
     function transferRandom() public {
         require(playerAddressMap[msg.sender].hasPotato, "Not enough tokens");
@@ -81,10 +84,22 @@ contract Potato {
         return playerAddressMap[key];
     }
 
+    function sortArray() internal {
+        for(uint i=1; i<addressArray.length; i++){
+            uint key = playerAddressMap[addressArray[i]].score;
+            uint j = i-1;
+            while((int(j)>=0) && (playerAddressMap[addressArray[j]].score>key)){
+                playerAddressMap[addressArray[j+1]].score = playerAddressMap[addressArray[j]].score;
+                j--;
+            }
+            playerAddressMap[addressArray[j+1]].score = key;
+        }
+    }
+
     function getAllPlayers() public view returns (Player[] memory) {
         Player[] memory playerArray = new Player[](addressArray.length);
-        for (uint i = 0; i < addressArray.length; i++) {
-            playerArray[i] = (playerAddressMap[addressArray[i]]);
+        for(uint i = 0; i<addressArray.length; i++){
+            playerArray[i] = playerAddressMap[addressArray[i]];
         }
         return playerArray;
     }

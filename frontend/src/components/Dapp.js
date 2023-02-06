@@ -23,7 +23,7 @@ import { NoTokensMessage } from "./NoTokensMessage";
 // This is the Hardhat Network id that we set in our hardhat.config.js.
 // Here's a list of network ids https://docs.metamask.io/guide/ethereum-provider.html#properties
 // to use when deploying to other networks.
-const HARDHAT_NETWORK_ID = '1337';
+const HARDHAT_NETWORK_ID = "1337";
 
 // This is an error code that indicates that the user canceled a transaction
 const ERROR_CODE_TX_REJECTED_BY_USER = 4001;
@@ -76,8 +76,8 @@ export class Dapp extends React.Component {
     // clicks a button. This callback just calls the _connectWallet method.
     if (!this.state.selectedAddress) {
       return (
-        <ConnectWallet 
-          connectWallet={() => this._connectWallet()} 
+        <ConnectWallet
+          connectWallet={() => this._connectWallet()}
           networkError={this.state.networkError}
           dismiss={() => this._dismissNetworkError()}
         />
@@ -113,7 +113,7 @@ export class Dapp extends React.Component {
 
         <div className="row">
           <div className="col-12">
-            {/* 
+            {/*
               Sending a transaction isn't an immediate action. You have to wait
               for it to be mined.
               If we are waiting for one, we show a message here.
@@ -122,8 +122,8 @@ export class Dapp extends React.Component {
               <WaitingForTransactionMessage txHash={this.state.txBeingSent} />
             )}
 
-            {/* 
-              Sending a transaction can fail in multiple ways. 
+            {/*
+              Sending a transaction can fail in multiple ways.
               If that happened, we show a message here.
             */}
             {this.state.transactionError && (
@@ -145,7 +145,7 @@ export class Dapp extends React.Component {
             )}
 
             {/*
-              This component displays a form that the user can use to send a 
+              This component displays a form that the user can use to send a
               transaction and transfer some tokens.
               The component doesn't have logic, it just calls the transferTokens
               callback.
@@ -162,6 +162,7 @@ export class Dapp extends React.Component {
         </div>
       </div>
     );
+    
   }
 
   componentWillUnmount() {
@@ -176,7 +177,9 @@ export class Dapp extends React.Component {
 
     // To connect to the user's wallet, we have to run this method.
     // It returns a promise that will resolve to the user's address.
-    const [selectedAddress] = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const [selectedAddress] = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
 
     // Once we have the address, we can initialize the application.
 
@@ -193,14 +196,14 @@ export class Dapp extends React.Component {
       // `accountsChanged` event can be triggered with an undefined newAddress.
       // This happens when the user removes the Dapp from the "Connected
       // list of sites allowed access to your addresses" (Metamask > Settings > Connections)
-      // To avoid errors, we reset the dapp state 
+      // To avoid errors, we reset the dapp state
       if (newAddress === undefined) {
         return this._resetState();
       }
-      
+
       this._initialize(newAddress);
     });
-    
+
     // We reset the dapp state if the network is changed
     window.ethereum.on("chainChanged", ([networkId]) => {
       this._stopPollingData();
@@ -277,7 +280,7 @@ export class Dapp extends React.Component {
   // This method sends an ethereum transaction to transfer tokens.
   // While this action is specific to this application, it illustrates how to
   // send a transaction.
-  async _transferTokens(to/*, amount*/) {
+  async _transferTokens(to /*, amount*/) {
     // Sending a transaction is a complex operation:
     //   - The user can reject it
     //   - It can fail before reaching the ethereum network (i.e. if the user
@@ -299,7 +302,7 @@ export class Dapp extends React.Component {
 
       // We send the transaction, and save its hash in the Dapp's state. This
       // way we can indicate that we are waiting for it to be mined.
-      const tx = await this._token.transfer(to/*, amount*/);
+      const tx = await this._token.transfer(to /*, amount*/);
       this.setState({ txBeingSent: tx.hash });
 
       // We use .wait() to wait for the transaction to be mined. This method
@@ -359,14 +362,14 @@ export class Dapp extends React.Component {
     this.setState(this.initialState);
   }
 
-  // This method checks if Metamask selected network is Localhost:8545 
+  // This method checks if Metamask selected network is Localhost:8545
   _checkNetwork() {
     if (window.ethereum.networkVersion === HARDHAT_NETWORK_ID) {
       return true;
     }
 
-    this.setState({ 
-      networkError: 'Please connect Metamask to Localhost:8545'
+    this.setState({
+      networkError: "Please connect Metamask to Localhost:8545",
     });
 
     return false;
