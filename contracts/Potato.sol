@@ -18,7 +18,8 @@ contract Potato {
     constructor(string memory _username) {
         Player memory first = Player({
             username: _username,
-            hasPotato: true,
+            // hasPotato: true,
+            balance: 1,
             score: 0,
             receivedToken: block.timestamp
         });
@@ -29,7 +30,8 @@ contract Potato {
 
     //new stuff here works
     function transfer(address to) public {
-        require(playerAddressMap[msg.sender].hasPotato, "You don't have it");
+        // require(playerAddressMap[msg.sender].hasPotato, "You don't have it");
+        require(playerAddressMap[msg.sender].balance==1, "You don't have it");
         require(playerExists(to), "This player is not in the game");
         require(msg.sender!=to, "Why are you sending it to yourself?");
         playerAddressMap[msg.sender].score = stopCounter(
@@ -37,8 +39,10 @@ contract Potato {
             block.timestamp,
             playerAddressMap[msg.sender].receivedToken
         );
-        playerAddressMap[msg.sender].hasPotato = false;
-        playerAddressMap[to].hasPotato = true;
+        // playerAddressMap[msg.sender].hasPotato = false;
+        playerAddressMap[msg.sender].balance = 0;
+        // playerAddressMap[to].hasPotato = true;
+        playerAddressMap[msg.sender].balance =1;
         initCounter(to);
     }
 
@@ -58,7 +62,8 @@ contract Potato {
     
     //
     function transferRandom() public {
-        require(playerAddressMap[msg.sender].hasPotato, "Not enough tokens");
+        // require(playerAddressMap[msg.sender].hasPotato, "You don't have it");
+        require(playerAddressMap[msg.sender].balance==1, "You don't have it");
         //to=randomaddress
         address to = getRandomAddress(msg.sender);
         playerAddressMap[msg.sender].score = stopCounter(
@@ -66,16 +71,21 @@ contract Potato {
             block.timestamp,
             playerAddressMap[msg.sender].receivedToken
         );
-        playerAddressMap[msg.sender].hasPotato = false;
-        playerAddressMap[to].hasPotato = true;
+        // playerAddressMap[msg.sender].hasPotato = false;
+        playerAddressMap[msg.sender].balance = 0;
+        // playerAddressMap[to].hasPotato = true;
+        playerAddressMap[msg.sender].balance =1;
         initCounter(to);
     }
 
     function addPlayers(address key, string memory username) public {
+        require(!playerExists(key), "You are already in the game.");
+        require(key==msg.sender, "You can't add someone else to the game");
         Player memory player = Player({
             username: username,
             score: 0,
-            hasPotato: false,
+            // hasPotato: false,
+            balance: 0,
             receivedToken: 0
         });
         playerAddressMap[key] = player;
@@ -119,8 +129,9 @@ contract Potato {
     }
 
     //works
-    function balanceOf(address account) public view returns (bool) {
-        return playerAddressMap[account].hasPotato;
+    function balanceOf(address account) public view returns (/*bool*/uint) {
+        // return playerAddressMap[account].hasPotato;
+        return playerAddressMap[account].balance;
     }
 
     //works fine

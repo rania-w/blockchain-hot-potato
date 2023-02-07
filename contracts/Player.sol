@@ -3,7 +3,8 @@ pragma solidity ^0.8.17;
 
 struct Player{
     string username;
-    bool hasPotato;
+    // bool hasPotato;
+    uint balance;
     uint256 score;
     uint256 receivedToken;
 }
