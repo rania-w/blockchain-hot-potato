@@ -27,9 +27,11 @@ contract Potato {
         addressArray.push(msg.sender);
     }
 
+    //new stuff here works
     function transfer(address to) public {
-        require(playerAddressMap[msg.sender].hasPotato, "Not enough tokens");
-
+        require(playerAddressMap[msg.sender].hasPotato, "You don't have it");
+        require(playerExists(to), "This player is not in the game");
+        require(msg.sender!=to, "Why are you sending it to yourself?");
         playerAddressMap[msg.sender].score = stopCounter(
             msg.sender,
             block.timestamp,
@@ -44,7 +46,7 @@ contract Potato {
         address sender
     ) internal view returns (address random) {
         uint arrayLength = addressArray.length;
-        uint8 digits = 0;
+        uint digits = 0;
         while (arrayLength != 0) {
             arrayLength /= 10;
             digits++;
@@ -119,5 +121,15 @@ contract Potato {
     //works
     function balanceOf(address account) public view returns (bool) {
         return playerAddressMap[account].hasPotato;
+    }
+
+    //works fine
+    function playerExists(address a) internal view returns(bool b){
+        b=false;
+        for(uint i=0; i<addressArray.length; i++){
+            if(addressArray[i]==a){
+                b = true;
+            }
+        }
     }
 }
