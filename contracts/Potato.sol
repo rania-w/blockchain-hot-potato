@@ -6,6 +6,8 @@
 
 pragma solidity ^0.8.17;
 
+import "@openzeppelin/contracts/utils/Strings.sol";
+
 contract Potato {
     string public name = "Potato Token";
     string public symbol = "POT";
@@ -14,6 +16,7 @@ contract Potato {
     address[] public addressArray;
     bool game;
     uint startTime;
+    uint len;
 
     struct Player {
         string username;
@@ -24,7 +27,7 @@ contract Potato {
         bool startedGame;
     }
 
-    constructor(string memory _username) {
+    constructor(string memory _username, uint _len) {
         Player memory first = Player({
             username: _username,
             // hasPotato: true,
@@ -38,6 +41,7 @@ contract Potato {
         addressArray.push(msg.sender);
         game = true;
         startTime = block.timestamp;
+        len = _len;
     }
 
     function transfer(address to) public checkGameRunning {
@@ -124,23 +128,6 @@ contract Potato {
         return playerAddressMap[key];
     }
 
-    //issues with mutability
-    function sortArray() internal {
-        for (uint i = 1; i < addressArray.length; i++) {
-            uint key = playerAddressMap[addressArray[i]].score;
-            uint j = i - 1;
-            while (
-                (int(j) >= 0) && (playerAddressMap[addressArray[j]].score > key)
-            ) {
-                playerAddressMap[addressArray[j + 1]].score = playerAddressMap[
-                    addressArray[j]
-                ].score;
-                j--;
-            }
-            playerAddressMap[addressArray[j + 1]].score = key;
-        }
-    }
-
     function getAllPlayers() public view returns (Player[] memory) {
         Player[] memory playerArray = new Player[](addressArray.length);
         for (uint i = 0; i < addressArray.length; i++) {
@@ -169,7 +156,6 @@ contract Potato {
         return playerAddressMap[account].balance;
     }
 
-    //works fine
     function playerExists(address a) internal view returns (bool b) {
         b = false;
         for (uint i = 0; i < addressArray.length; i++) {
@@ -187,7 +173,7 @@ contract Potato {
         //uint hour = 3600;
         //better way of calculating because receivedToken changes a lot
         uint timePassed = block.timestamp - startTime;
-        require(timePassed >= 180, "It is not time yet.");
+        require(timePassed >= len, "It is not time yet.");
         //calculate final score
         for (uint i = 0; i < addressArray.length; i++) {
             if (playerAddressMap[addressArray[i]].balance == 1) {
@@ -196,9 +182,23 @@ contract Potato {
                     block.timestamp,
                     playerAddressMap[addressArray[i]].receivedToken
                 );
-            }
+            }  
         }
         game = false;
+        
+    }
+
+    function getWinner () public view returns (string memory){
+        require(!game, "It's not over yet!!!");
+        uint min = block.timestamp;
+        string memory winner;
+        for (uint i = 0; i < addressArray.length; i++) {
+            if(playerAddressMap[addressArray[i]].score<min){
+                min = playerAddressMap[addressArray[i]].score;
+                winner = playerAddressMap[addressArray[i]].username;
+            }
+        }
+        return string.concat("The winner is: ", winner, "! With an incredible score of: ", Strings.toString(min));
     }
 
     modifier checkGameRunning() {
