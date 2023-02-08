@@ -71,6 +71,16 @@ contract Potato {
         }
         uint mod = 10 * digits;
         uint rNumber = playerAddressMap[sender].receivedToken % mod;
+        if (rNumber >= addressArray.length) {
+            rNumber = addressArray.length - 1;
+        }
+        if (sender == addressArray[rNumber]) {
+            if (rNumber == 0) {
+                rNumber++;
+            } else if (rNumber == addressArray.length - 1) {
+                rNumber--;
+            }
+        }
         return addressArray[rNumber];
     }
 
@@ -177,7 +187,7 @@ contract Potato {
         //uint hour = 3600;
         //better way of calculating because receivedToken changes a lot
         uint timePassed = block.timestamp - startTime;
-        require(timePassed >= 180);
+        require(timePassed >= 180, "It is not time yet.");
         //calculate final score
         for (uint i = 0; i < addressArray.length; i++) {
             if (playerAddressMap[addressArray[i]].balance == 1) {
