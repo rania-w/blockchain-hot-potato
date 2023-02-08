@@ -101,7 +101,7 @@ export class Dapp extends React.Component {
             </h1>
             <p>
               {/* Welcome <b>{this.state.selectedAddress}</b>, you have{" "} */}
-              Welcome username!
+              Welcome <b>{this.state.selectedAddress}</b>!
               <b>
                 {/* you have {this.state.balance.toString()} {this.state.tokenData.symbol} */}
               </b>
@@ -152,8 +152,8 @@ export class Dapp extends React.Component {
             */}
             {this.state.balance.gt(0) && (
               <Transfer
-                transferTokens={(to, amount) =>
-                  this._transferTokens(to, amount)
+                transferTokens={(to/*, amount*/) =>
+                  this._transferTokens(to/*, amount*/)
                 }
                 tokenSymbol={this.state.tokenData.symbol}
               />
