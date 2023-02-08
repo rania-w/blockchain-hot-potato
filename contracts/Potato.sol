@@ -42,7 +42,7 @@ contract Potato {
         // playerAddressMap[msg.sender].hasPotato = false;
         playerAddressMap[msg.sender].balance = 0;
         // playerAddressMap[to].hasPotato = true;
-        playerAddressMap[msg.sender].balance =1;
+        playerAddressMap[to].balance =1;
         initCounter(to);
     }
 
