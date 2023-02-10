@@ -1,9 +1,5 @@
 //SPDX-License-Identifier: UNLICENSED
 
-/**
- * sve okej osim transfer random, koji je radio prvi put al drugi put ne
- */
-
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/utils/Strings.sol";
@@ -182,23 +178,32 @@ contract Potato {
                     block.timestamp,
                     playerAddressMap[addressArray[i]].receivedToken
                 );
-            }  
+            }
         }
         game = false;
-        
     }
 
-    function getWinner () public view returns (string memory){
+    function getWinner() public view returns (string memory) {
         require(!game, "It's not over yet!!!");
         uint min = block.timestamp;
         string memory winner;
         for (uint i = 0; i < addressArray.length; i++) {
-            if(playerAddressMap[addressArray[i]].score<min){
+            if (playerAddressMap[addressArray[i]].score < min) {
                 min = playerAddressMap[addressArray[i]].score;
                 winner = playerAddressMap[addressArray[i]].username;
             }
         }
-        return string.concat("The winner is: ", winner, "! With an incredible score of: ", Strings.toString(min));
+        return
+            string.concat(
+                "The winner is: ",
+                winner,
+                "! With an incredible score of: ",
+                Strings.toString(min)
+            );
+    }
+
+    function getAddressArray() public view returns (address[] memory) {
+        return addressArray;
     }
 
     modifier checkGameRunning() {

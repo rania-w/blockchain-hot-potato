@@ -23,7 +23,7 @@ async function main() {
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
   const Potato = await ethers.getContractFactory("Potato");
-  const potato = await Potato.deploy("firstUsername");
+  const potato = await Potato.deploy("firstUsername", 180);
   await potato.deployed();
 
   console.log("Potato address:", potato.address);
